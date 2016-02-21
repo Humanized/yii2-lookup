@@ -1,6 +1,6 @@
 <?php
 
-namespace humanized\clihelpers;
+namespace humanized\lookup;
 
 /**
  * Humanized Lookup Table Module for Yii2
