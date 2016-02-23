@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * LookupController implements the CRUD actions for ArtifactType model.
  */
-class LookupController extends Controller {
+class DefaultController extends Controller {
 
     public $modelClass = NULL;
 
@@ -33,9 +33,9 @@ class LookupController extends Controller {
 
     public function beforeAction($action)
     {
-        $caller = \yii::$app->getRequest()->getQueryParams('caller');
+        $caller = \yii::$app->getRequest()->getQueryParam('caller');
         if (!isset($caller) || $caller == '') {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new \yii\base\InvalidRouteException('Module requires specification of caller parameter');
         }
 
         $this->modelClass = $this->module->params['modelRegister'][$caller];
@@ -48,26 +48,13 @@ class LookupController extends Controller {
      */
     public function actionIndex($caller)
     {
-        $searchModel = new $this->modelClass();
+        $searchModel = new $this->modelClass(['scenario' => \humanized\lookup\models\LookupTable::SCENARIO_SEARCH]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
                     'caller' => $caller,
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single ArtifactType model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($caller, $id)
-    {
-        return $this->render('view', [
-                    'caller' => $caller,
-                    'model' => $this->findModel($id),
         ]);
     }
 
@@ -119,8 +106,7 @@ class LookupController extends Controller {
     public function actionDelete($caller, $id)
     {
         $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'caller' => $caller]);
     }
 
     /**
@@ -132,7 +118,8 @@ class LookupController extends Controller {
      */
     protected function findModel($id)
     {
-        if (($model = ArtifactType::findOne($id)) !== null) {
+        $class = $this->modelClass;
+        if (($model = $class::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

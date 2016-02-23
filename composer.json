@@ -4,7 +4,7 @@
     "description": "Yii2 Module to deal with lookup tables (tables having only id and a unique-name)",
     "keywords": ["yii2", "database", "helper"],
     "license": "GPL-3.0",
-    "version":"0.1.0",
+    "version": "0.1.0",
     "support": {
         "issues": "https://github.com/Humanized/yii2-lookup/issues",
         "forum": "http://www.yiiframework.com/forum/",
@@ -23,8 +23,8 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "@dev"
-
+        "yiisoft/yii2": "2.0.7",
+        "kartik-v/yii2-editable": "*"
     },
     "autoload": {
         "psr-4": {
