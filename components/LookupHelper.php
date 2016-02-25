@@ -15,14 +15,16 @@ class LookupHelper {
     public static function initModel()
     {
         $callerClass = get_called_class();
+        // echo $callerClass;
         return new $callerClass();
     }
 
     public static function getModelRegister()
     {
         $class = self::initModel();
+        //  var_dump($class->register);
         return array_map(function($x) {
-            return $x->model;
+            return $x['model'];
         }, $class->register);
     }
 
