@@ -14,25 +14,33 @@ class LookupHelper {
 
     public static function getModelRegister()
     {
-        $class = get_called_class();
-        $register = new $class();
-
-        return $register->modelRegister;
+        $callerClass = get_called_class();
+        $class = new $callerClass();
+        return $class->modelRegister;
     }
 
     public static function getLookupTables()
     {
-        return array_keys($this->modelRegister);
+        $callerClass = get_called_class();
+        $class = new $callerClass();
+        return array_keys($class->modelRegister);
     }
 
-    public static function getTableName($lookup)
+    public static function getTableName($caller)
     {
-        return str_replace('-', '_', $lookup);
+        return str_replace('-', '_', $caller);
     }
 
-    public static function getCaller($lookup)
+    public static function getCaller($caller)
     {
-        return $lookup;
+        return $caller;
+    }
+
+    public static function getModel($caller)
+    {
+        $callerClass = get_called_class();
+        $class = new $callerClass();
+        return $class->modelRegister[$caller];
     }
 
 }
