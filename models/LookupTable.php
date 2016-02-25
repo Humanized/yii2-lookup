@@ -18,6 +18,11 @@ abstract class LookupTable extends \yii\db\ActiveRecord {
     const SCENARIO_DEFAULT = 'default';
     const SCENARIO_SEARCH = 'search';
 
+    public $createPermission = TRUE;
+    public $readPermission = TRUE;
+    public $updatePermission = TRUE;
+    public $deletePermission = TRUE;
+
     /**
      * @inheritdoc
      */
@@ -92,6 +97,26 @@ abstract class LookupTable extends \yii\db\ActiveRecord {
     {
         $caller = get_called_class();
         return $caller::findOne($id);
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                return $this->createPermission;
+            } else {
+                return $this->updatePermission;
+            }
+        }
+        return false;
+    }
+
+    public function beforeDelete()
+    {
+        if (parent::beforeDelete()) {
+            return $this->deletePermission;
+        }
+        return false;
     }
 
 }
