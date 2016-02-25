@@ -10,20 +10,26 @@ namespace humanized\lookup\components;
 
 class LookupHelper {
 
-    public $modelRegister = [];
+    public $register = [];
+
+    public static function initModel()
+    {
+        $callerClass = get_called_class();
+        return new $callerClass();
+    }
 
     public static function getModelRegister()
     {
-        $callerClass = get_called_class();
-        $class = new $callerClass();
-        return $class->modelRegister;
+        $class = self::initModel();
+        return array_map(function($x) {
+            return $x->model;
+        }, $class->register);
     }
 
     public static function getLookupTables()
     {
-        $callerClass = get_called_class();
-        $class = new $callerClass();
-        return array_keys($class->modelRegister);
+        $class = self::initModel();
+        return array_keys($class->register);
     }
 
     public static function getTableName($caller)
@@ -38,9 +44,8 @@ class LookupHelper {
 
     public static function getModel($caller)
     {
-        $callerClass = get_called_class();
-        $class = new $callerClass();
-        return $class->modelRegister[$caller];
+        $class = self::initModel();
+        return $class->register[$caller];
     }
 
 }

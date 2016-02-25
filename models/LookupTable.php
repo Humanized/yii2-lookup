@@ -15,6 +15,7 @@ use yii\data\ActiveDataProvider;
  */
 abstract class LookupTable extends \yii\db\ActiveRecord {
 
+    const SCENARIO_DEFAULT = 'default';
     const SCENARIO_SEARCH = 'search';
 
     /**
