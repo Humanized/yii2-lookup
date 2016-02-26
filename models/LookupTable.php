@@ -78,7 +78,7 @@ abstract class LookupTable extends \yii\db\ActiveRecord {
     public static function getDropdownData()
     {
         $caller = get_called_class();
-        return ArrayHelper::map($caller::find()->asArray()->all());
+        return ArrayHelper::map($caller::find()->asArray()->all(), 'id', 'name');
     }
 
     public static function getIdByName($name)
