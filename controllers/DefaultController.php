@@ -12,7 +12,8 @@ use yii\filters\VerbFilter;
 /**
  * LookupController implements the CRUD actions for ArtifactType model.
  */
-class DefaultController extends Controller {
+class DefaultController extends Controller
+{
 
     public $modelClass = NULL;
 
@@ -48,11 +49,16 @@ class DefaultController extends Controller {
      */
     public function actionIndex($caller)
     {
+        $model = new $this->modelClass();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model = new $this->modelClass();
+        }
         $searchModel = new $this->modelClass(['scenario' => \humanized\lookup\models\LookupTable::SCENARIO_SEARCH]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
                     'caller' => $caller,
+                    'model' => $model,
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
         ]);

@@ -16,37 +16,47 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="<?= $caller ?>-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create ' . $word, ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-    <?=
-    GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            // 'id',
-            'name',
-            ['class' => 'yii\grid\ActionColumn', 'template' => '{delete}', 'buttons' => [
+    <div class="row">
 
-                    //view button
-                    'delete' => function ($url, $model) use ($caller) {
+        <div class="col-md-3">
+            <div class="well">
+                <?php echo $this->render('_form', ['model' => $model, 'caller' => $caller]); ?>
+            </div>
+        </div>
 
-                        $options = [
-                            // 'visible' => (int) $model['status'] != 0 ? TRUE : FALSE,
-                            //'hidden' => (int) $model['status'] != 0 ? TRUE : FALSE,
-                            'title' => \Yii::t('yii', 'Delete Account'),
-                            'aria-label' => \Yii::t('yii', 'Delete Account'),
-                            'data-confirm' => \Yii::t('yii', 'Are you sure you want to delete this account?'),
-                            'data-method' => 'post',
-                            'data-pjax' => '0',
-                        ];
-                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete', 'caller' => $caller, 'id' => $model['id']], $options);
-                    },
-                        ],],
-                ],
-            ]);
-            ?>
+        <div class="col-md-9">
+            <?=
+            GridView::widget([
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
+                    // 'id',
+                    'name',
+                    ['class' => 'yii\grid\ActionColumn', 'template' => '{delete}', 'buttons' => [
+
+                            //view button
+                            'delete' => function ($url, $model) use ($caller) {
+
+                                $options = [
+                                    // 'visible' => (int) $model['status'] != 0 ? TRUE : FALSE,
+                                    //'hidden' => (int) $model['status'] != 0 ? TRUE : FALSE,
+                                    'title' => \Yii::t('yii', 'Delete Account'),
+                                    'aria-label' => \Yii::t('yii', 'Delete Account'),
+                                    'data-confirm' => \Yii::t('yii', 'Are you sure you want to delete this account?'),
+                                    'data-method' => 'post',
+                                    'data-pjax' => '0',
+                                ];
+                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete', 'caller' => $caller, 'id' => $model['id']], $options);
+                            },
+                                ],],
+                        ],
+                    ]);
+                    ?>
+        </div>
+    </div>
+
+
+
 </div>
