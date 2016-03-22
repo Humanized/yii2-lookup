@@ -13,7 +13,8 @@ use yii\data\ActiveDataProvider;
  * @property string $name
  *
  */
-abstract class LookupTable extends \yii\db\ActiveRecord {
+abstract class LookupTable extends \yii\db\ActiveRecord
+{
 
     const SCENARIO_DEFAULT = 'default';
     const SCENARIO_SEARCH = 'search';
@@ -117,6 +118,20 @@ abstract class LookupTable extends \yii\db\ActiveRecord {
             return $this->deletePermission;
         }
         return false;
+    }
+
+    public static function map($records, $source = NULL)
+    {
+        if (isset($source)) {
+            $map = ['source' => $source];
+        }
+        $caller = get_called_class();
+        foreach ($records as $record) {
+            // echo $record['id'] . '::' . $record['name'] . "\n";
+            $map[$record['id']] = $caller::getIdByName($record['name']);
+        }
+
+        return $map;
     }
 
 }
