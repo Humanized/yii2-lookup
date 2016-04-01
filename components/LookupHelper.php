@@ -8,7 +8,8 @@
 
 namespace humanized\lookup\components;
 
-class LookupHelper {
+class LookupHelper
+{
 
     public $register = [];
 
@@ -25,6 +26,14 @@ class LookupHelper {
         //  var_dump($class->register);
         return array_map(function($x) {
             return $x['model'];
+        }, $class->register);
+    }
+
+    public static function getRegister($var)
+    {
+        $class = self::initModel();
+        return array_map(function($x) use($var) {
+            return $x[$var];
         }, $class->register);
     }
 
