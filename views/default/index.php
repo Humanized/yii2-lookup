@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\ArtifactTypeSearch */
@@ -33,7 +33,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
                     // 'id',
-                    'name',
+                    [ 'class' => 'kartik\grid\EditableColumn',
+                        'attribute' => 'name',
+                        'refreshGrid' => TRUE,
+                        'editableOptions' => [
+                            'header' => 'Buy Amount',
+                            'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+                        ],
+                    ],
                     ['class' => 'yii\grid\ActionColumn', 'template' => '{delete}', 'buttons' => [
 
                             //view button

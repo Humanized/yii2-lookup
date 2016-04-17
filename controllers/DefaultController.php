@@ -3,8 +3,7 @@
 namespace humanized\lookup\controllers;
 
 use Yii;
-use common\models\core\ArtifactType;
-use common\models\ArtifactTypeSearch;
+Use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -16,6 +15,7 @@ class DefaultController extends Controller
 {
 
     public $modelClass = NULL;
+    private $_post = NULL;
 
     /**
      * @inheritdoc
@@ -38,13 +38,13 @@ class DefaultController extends Controller
         if (!isset($caller) || $caller == '') {
             throw new \yii\base\InvalidRouteException('Module requires specification of caller parameter');
         }
-
+        $this->_post = \yii\helpers\Inflector::classify($caller);
         $this->modelClass = $this->module->params['modelRegister'][$caller];
         return parent::beforeAction($action);
     }
 
     /**
-     * Lists all ArtifactType models.
+     * Single interface for all CRUD Operations.
      * @return mixed
      */
     public function actionIndex($caller)
@@ -53,6 +53,11 @@ class DefaultController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model = new $this->modelClass();
         }
+        if (Yii::$app->request->post('hasEditable')) {
+            $this->_update();
+            return;
+        }
+
         $searchModel = new $this->modelClass(['scenario' => \humanized\lookup\models\LookupTable::SCENARIO_SEARCH]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -64,23 +69,16 @@ class DefaultController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new ArtifactType model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate($caller)
+    private function _update()
     {
-        $model = new ArtifactType();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                        'model' => $model,
-                        'caller' => $caller,
-            ]);
-        }
+   
+        //$post = ['ArtifactType' => $posted];
+        $model = $this->findModel(Yii::$app->request->post('editableKey'));
+        $model->setAttribute('name', current($_POST[$this->_post])['name']);
+        $model->save();
+        $output = '';
+        $out = Json::encode(['output' => $output, 'message' => '']);
+        echo $out;
     }
 
     /**

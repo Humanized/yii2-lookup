@@ -53,7 +53,7 @@ abstract class LookupTable extends \yii\db\ActiveRecord
     public function search($params)
     {
         $class = get_called_class();
-        $query = $class::find();
+        $query = $class::find()->indexBy('id');
 
         // add conditions that should always apply here
 
