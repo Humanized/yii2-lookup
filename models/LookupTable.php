@@ -76,62 +76,17 @@ abstract class LookupTable extends \yii\db\ActiveRecord
         return $dataProvider;
     }
 
-    public static function getDropdownData()
+    public static function synchronise($values, $purge)
     {
-        $caller = get_called_class();
-        return ArrayHelper::map($caller::find()->asArray()->all(), 'id', 'name');
-    }
-
-    public static function getIdByName($name)
-    {
-        $model = self::getModelByName($name);
-        return isset($model) ? $model->id : NULL;
-    }
-
-    public static function getModelByName($name)
-    {
-        $caller = get_called_class();
-        return $caller::findOne(['name' => $name]);
-    }
-
-    public static function getModelById($id)
-    {
-        $caller = get_called_class();
-        return $caller::findOne($id);
-    }
-
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            if ($insert) {
-                return $this->createPermission;
-            } else {
-                return $this->updatePermission;
-            }
-        }
-        return false;
-    }
-
-    public function beforeDelete()
-    {
-        if (parent::beforeDelete()) {
-            return $this->deletePermission;
-        }
-        return false;
-    }
-
-    public static function map($records, $source = NULL)
-    {
-        if (isset($source)) {
-            $map = ['source' => $source];
-        }
-        $caller = get_called_class();
-        foreach ($records as $record) {
-            // echo $record['id'] . '::' . $record['name'] . "\n";
-            $map[$record['id']] = $caller::getIdByName($record['name']);
+        $class = get_called_class();
+        foreach ($values as $value) {
+            $model = new $class(['name' => $value]);
+            $model->save();
         }
 
-        return $map;
+        if ($purge) {
+            $class::deleteAll(['NOT IN', 'name', $values]);
+        }
     }
 
 }

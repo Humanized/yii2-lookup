@@ -18,16 +18,14 @@ namespace humanized\lookup;
 class Module extends \yii\base\Module
 {
 
-    public $modelRegister = [];
+    public $configurationClass = [];
 
     public function init()
     {
         parent::init();
         if (\Yii::$app instanceof \yii\console\Application) {
-            $this->controllerNamespace = 'humanized\lookup\commands';
+            $this->controllerNamespace = 'humanized\lookup\cli';
         }
-
-        $this->params['modelRegister'] = $this->modelRegister;
     }
 
 }
