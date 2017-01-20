@@ -20,18 +20,24 @@ class CrudAction extends Action
 
     public function run()
     {
-
-        $model = new $this->modelClass();
+        $modelClass = $this->modelClass;
+        //Model Creation
+        $model = new $modelClass;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $model = new $this->modelClass();
         }
+        //Inline Model Update
         if (Yii::$app->request->post('hasEditable')) {
-
-            //  $this->_updateInline();
             echo Json::encode(['output' => '', 'message' => $this->_updateInline()]);
-            //         echo Json::encode(['output' => '', 'message' => \yii\helpers\Inflector::classify($model->tableName())]);
             return;
         }
+
+        //Inline Model Update
+        if (Yii::$app->request->post('hasDeletable')) {
+            $modelClass::deleteAll(['id' => Yii::$app->request->post('deletableKey')]);
+        }
+
+
         $searchModel = new $this->modelClass(['scenario' => \humanized\lookup\models\LookupTable::SCENARIO_SEARCH]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -44,13 +50,8 @@ class CrudAction extends Action
 
     private function _updateInline()
     {
-
         $msg = '';
         $modelClass = $this->modelClass;
-
-        /**
-         * /humanized/lookup/models/LookupTable
-         */
         $model = $modelClass::findOne(Yii::$app->request->post('editableKey'));
         if (isset($model)) {
             $attribute = current(Yii::$app->request->post(Inflector::classify($model->tableName())))['name'];
@@ -60,16 +61,6 @@ class CrudAction extends Action
             }
         }
         return $msg;
-        /*
-          if (isset($model)) {
-          $model->setAttribute('name', current($_POST[$this->_post])['name']);
-          $model->save();
-          }
-          $output = '';
-          $out = Json::encode(['output' => $output, 'message' => '']);
-          echo $out;
-         * 
-         */
     }
 
 }

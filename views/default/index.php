@@ -2,8 +2,6 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
-use kartik\form\ActiveForm;
-
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\ArtifactTypeSearch */
@@ -28,6 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
 
         <div class="col-md-9">
+
             <?=
             GridView::widget([
                 'export' => false,
@@ -51,17 +50,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     ['class' => 'yii\grid\ActionColumn', 'template' => '{delete}', 'buttons' => [
                             //view button
                             'delete' => function ($url, $model) {
-
                                 $options = [
                                     // 'visible' => (int) $model['status'] != 0 ? TRUE : FALSE,
                                     //'hidden' => (int) $model['status'] != 0 ? TRUE : FALSE,
                                     'title' => \Yii::t('yii', 'Delete Account'),
                                     'aria-label' => \Yii::t('yii', 'Delete Account'),
-                                    'data-confirm' => \Yii::t('yii', 'Are you sure you want to delete this account?'),
+                                    'data-confirm' => \Yii::t('yii', 'Are you sure you want to delete this record?'),
                                     'data-method' => 'post',
+                                    'data-params' => [
+                                        'hasDeletable' => true, 'deletableKey' => $model->id,
+                                    ],
                                     'data-pjax' => '0',
                                 ];
-                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete', 'caller' => '$caller', 'id' => $model['id']], $options);
+                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['type',], $options);
                             },
                         ],],
                 ],
