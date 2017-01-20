@@ -1,22 +1,24 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use \kartik\form\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\core\ArtifactType */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="<?= $caller ?>-form">
+<div class="<?= 'test' ?>-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php
+    $form = ActiveForm::begin([
+    ]);
+    ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true])->label('Insert Record') ?>
 
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
+
+    <?= Html::submitButton('Create', ['class' => 'btn btn-success']) ?>
 
     <?php ActiveForm::end(); ?>
 
