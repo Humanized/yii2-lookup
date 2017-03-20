@@ -88,5 +88,12 @@ abstract class LookupTable extends \yii\db\ActiveRecord
             $class::deleteAll(['NOT IN', 'name', $values]);
         }
     }
+    
+    public static function getIdByName($name)
+    {
+		$class = get_called_class();
+        
+        return $class::find()->select('id')->where(['name' => $name])->scalar();
+    }
 
 }
